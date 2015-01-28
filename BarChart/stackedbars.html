@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+  .chart rect {
+    fill: steelblue;
+  }
+
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .axis text {
+    font-size: 12px;
+  }
+
+  .chart .current {
+    fill: green;
+    cursor: pointer;
+  }
+
+  .inb {
+    display: inline-block;
+  }
+
+  .companies {
+    margin-left: 20px;
+  }
+
+  .chart-container, .companies {
+    vertical-align: top;
+  }
+</style>
+<body>
+
+  <div class="chart-container inb">
+    <svg class="chart">
+    </svg>
+  </div>
+
+  <div class="companies inb">
+
+  </div>
+
+</body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<script src="./stackedbars.js"></script>

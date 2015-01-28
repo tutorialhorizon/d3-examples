@@ -31,13 +31,13 @@ function d3InvertedBars() {
     y: d3.scale.linear()
   };
 
-  scale.y.range([0, 100]);
   scale.y.domain([0, 100]);
+  scale.y.range([0, 400]);
 
-  var chart = d3.select('.chart');
-  var ages = [10, 20, 30, 40];
+  var ages = [30, 22, 33, 45];
   var barWidth = 20;
 
+  var chart = d3.select('.chart');
   var bars = chart
     .selectAll('g')
     .data(ages)
@@ -48,7 +48,7 @@ function d3InvertedBars() {
     .attr('x', function (d, i) {
       return i * barWidth;
     })
-    .attr('width', 20)
+    .attr('width', barWidth - 1)
     .attr('height', scale.y);
 }
 
