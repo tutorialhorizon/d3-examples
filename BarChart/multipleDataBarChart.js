@@ -7,37 +7,48 @@ var companyStats = {
     {dept: 'E', age : 27}
   ],
   'Ford': [
-    {dept: 'A', age : 22},
     {dept: 'B', age : 46},
-    {dept: 'C', age : 35},
     {dept: 'D', age : 23},
+    {dept: 'A', age : 22},
     {dept: 'E', age : 44},
+    {dept: 'C', age : 35},
     {dept: 'F', age : 34}
   ],
   'GM': [
-    {dept: 'A', age : 26},
     {dept: 'B', age : 22},
-    {dept: 'C', age : 37},
+    {dept: 'A', age : 26},
     {dept: 'D', age : 33},
     {dept: 'E', age : 23},
-    {dept: 'F', age : 23},
+    {dept: 'C', age : 37},
     {dept: 'G', age : 33},
+    {dept: 'F', age : 28},
     {dept: 'H', age : 43}
   ]
 };
 
 var minBarHeight = 30;
+var maxWidth = 500;
+var barPadding = 0.05;
+var maxAge = 65;
+var margins = {
+  left: 50,
+  top: 20
+};
+var chart = d3.select('svg')
+  .attr({
+    width: maxWidth,
+    height: 500
+  })
+  .append('g')
+  .attr({
+      class: 'chart',
+      transform: function (d, i) {
+        return 'translate(' + margins.left + ',' + margins.top + ')';
+      }
+    });
 
 function updateChart(employees) {
   var maxHeight = minBarHeight * employees.length;
-  var maxWidth = 500;
-  var barPadding = 0.05;
-  var maxAge = 65;
-  var margins = {
-    left: 50,
-    top: 20
-  };
-
   // Define your conversion functions
   var convert = {
     x: d3.scale.linear(),
@@ -64,33 +75,31 @@ function updateChart(employees) {
     })
   );
 
-  d3.selectAll("svg > *").remove();
+  chart.attr({height: maxHeight });
 
-  var chart = d3.select('.chart').attr({width: maxWidth})
-    .attr({height: maxHeight})
-    .append('g')
-    .attr({
-        transform: function (d, i) {
-          return 'translate(' + margins.left + ',' + margins.top + ')';
-        }
-      });
+  var barHeight = convert.y.rangeBand();
+
+  chart.selectAll("svg .axis").remove();
 
   var bars = chart
     .selectAll('g')
-    .data(employees)
-    .enter()
+    .data(employees, function (d) { return d.dept; });
+
+  bars.transition().attr({
+      transform: function (d, i) {
+        return 'translate(0,' + convert.y(d.dept) + ')';
+      }
+    });
+
+  bars.enter()
     .append('g') // Container for the each bar
     .attr({
       transform: function (d, i) {
         return 'translate(0,' + convert.y(d.dept) + ')';
       },
       class: 'bar'
-    });
-
-  var barHeight = convert.y.rangeBand();
-
-  bars.append('rect')
-    .classed({'bar ': true})
+    })
+    .append('rect')
     .attr({
       width: 0,
       height: barHeight,
@@ -101,6 +110,8 @@ function updateChart(employees) {
         return convert.x(d.age);
       }
     });
+
+  bars.exit().remove();
 
   chart.append('g') // Container for the axis
     .attr({
@@ -121,7 +132,6 @@ function updateChart(employees) {
 
 
 updateChart(companyStats['Tesla']);
-// animateBarsUp();
 
 document.querySelector('#companies')
   .addEventListener('change', function (e) {
