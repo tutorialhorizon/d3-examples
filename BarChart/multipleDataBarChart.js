@@ -75,7 +75,7 @@ function updateChart(employees) {
     })
   );
 
-  chart.attr({height: maxHeight });
+  chart.attr({height: maxHeight});
 
   var barHeight = convert.y.rangeBand();
 
